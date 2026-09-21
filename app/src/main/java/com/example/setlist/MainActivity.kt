@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.setlist.ui.theme.SetListTheme
+import kotlinx.coroutines.MainScope
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,138 +46,10 @@ class MainActivity : ComponentActivity() {
                 Column(
                     modifier = Modifier.safeDrawingPadding()
                 ) {
-                    AddArtistForm()
-                    DisplayArtistList()
+                    MainScreen()
                 }
             }
         }
     }
 }
 
-data class Artist(var name: String, val genre: String, val yearFormed: Int?)
-var artistList = mutableStateListOf<Artist>()
-@Composable
-fun AddArtistForm() {
-    var name by remember { mutableStateOf("") }
-    var genre by remember { mutableStateOf("") }
-    var yearFormed by remember { mutableStateOf("") }
-
-    Column(
-        modifier = Modifier
-            .padding(horizontal = 10.dp),
-        verticalArrangement = Arrangement.spacedBy(5.dp)
-    ) {
-        OutlinedTextField(
-            value = name,
-            onValueChange = { name = it },
-            label = { Text("Enter artist name..") },
-            singleLine = true
-        )
-        Spacer(
-            modifier = Modifier
-                .height(3.dp)
-        )
-        OutlinedTextField(
-            value = genre,
-            onValueChange = { genre = it },
-            label = { Text("Enter artist's genre..") },
-            singleLine = true
-        )
-        Spacer(
-            modifier = Modifier
-                .height(3.dp)
-        )
-        OutlinedTextField(
-            value = yearFormed,
-            onValueChange = { yearFormed = it },
-            label = { Text("Enter the year they formed..") },
-            singleLine = true
-        )
-        Spacer(
-            modifier = Modifier
-                .height(3.dp)
-        )
-        FloatingActionButton(
-            onClick = {
-                val artist = Artist(
-                    name = name,
-                    yearFormed = yearFormed.toIntOrNull() ?: 0,
-                    genre = genre
-                )
-                artistList.add(artist)
-                name = ""
-                genre = ""
-                yearFormed = ""
-            }
-        ) {
-            Text("Add Artist!")
-        }
-        HorizontalDivider(
-            modifier = Modifier.padding(
-                start = 2.dp,
-                top = 10.dp,
-                end = 2.dp,
-                bottom = 10.dp
-            ),
-            thickness = 1.dp,
-            color = Color(0xFF494d7e)
-        )
-    }
-}
-
-@Composable
-fun DisplayArtistList() {
-    LazyColumn(
-        modifier = Modifier
-            .padding(horizontal = 10.dp),
-        verticalArrangement = Arrangement.spacedBy(5.dp)
-    ) {
-        items(artistList) { item ->
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
-                Column() {
-                    Text(
-                        text = item.name,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp
-                    )
-                    Text(
-                        text = item.genre,
-                        fontStyle = FontStyle.Italic
-                    )
-                    if (item.yearFormed == 0) {
-                        Text(
-                            text = "Founded in: N/A",
-                            fontStyle = FontStyle.Italic
-                        )
-                    } else {
-                        Text(
-                            text = "Founded in: " + item.yearFormed,
-                            fontStyle = FontStyle.Italic
-                        )
-                    }
-                }
-
-                FloatingActionButton(
-                    onClick = {
-                        artistList.remove(item)
-                    }
-                ) {
-                    Text("kill")
-                }
-            }
-            HorizontalDivider(
-                modifier = Modifier.padding(
-                    start = 2.dp,
-                    top = 10.dp,
-                    end = 2.dp,
-                    bottom = 10.dp
-                ),
-                thickness = 1.dp,
-                color = Color(0xFF494d7e)
-            )
-        }
-    }
-}
