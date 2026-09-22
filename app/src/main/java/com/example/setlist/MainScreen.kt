@@ -23,6 +23,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -47,6 +48,12 @@ fun MainScreen() {
     var genre by remember { mutableStateOf("") }
     var yearFormed by remember { mutableStateOf("") }
     val artistList = remember { mutableStateListOf<Artist>() }
+
+    val formValid by remember {
+        derivedStateOf {
+            name.isNotEmpty() && genre.isNotEmpty() && yearFormed.length == 4 && yearFormed.isDigitsOnly()
+        }
+    }
     Scaffold(
         topBar = {
             TopAppBar(title = {Text("The Artist App.")})
@@ -66,7 +73,11 @@ fun MainScreen() {
                 onYearFormedChange = { yearFormed = it },
                 onAddClick = {
                     artistList.add(Artist(name, genre, yearFormed))
-                }
+                    name = ""
+                    genre = ""
+                    yearFormed = ""
+                },
+                formValid = formValid
             )
             DisplayArtistList(
                 artistList = artistList,
@@ -84,12 +95,15 @@ fun AddArtistForm(
     onNameChange: (String) -> Unit,
     onGenreChange: (String) -> Unit,
     onYearFormedChange: (String) -> Unit,
-    onAddClick: () -> Unit
+    onAddClick: () -> Unit,
+    formValid: Boolean
     ) {
     var nameError = name.isEmpty()
     var genreError = genre.isEmpty()
     var yearError = !yearFormed.isDigitsOnly() || yearFormed.length !== 4
-    var formValid = !nameError && !genreError && !yearError
+    //var formValid = !nameError && !genreError && !yearError
+
+
     Column(
         modifier = Modifier
             .padding(horizontal = 10.dp),
