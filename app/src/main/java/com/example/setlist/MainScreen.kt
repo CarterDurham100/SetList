@@ -1,20 +1,27 @@
 package com.example.setlist
 
+import android.R.attr.title
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -25,34 +32,46 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.setlist.ui.theme.SetListTheme
 
 data class Artist(var name: String, val genre: String, val yearFormed: Int?)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen() {
     var name by remember { mutableStateOf("") }
     var genre by remember { mutableStateOf("") }
     var yearFormed by remember { mutableStateOf("") }
     val artistList = remember { mutableStateListOf<Artist>() }
-    Column() {
-        AddArtistForm(
-            name = name,
-            genre = genre,
-            yearFormed = yearFormed,
-            onNameChange = { name = it },
-            onGenreChange = { genre = it },
-            onYearFormedChange = { yearFormed = it },
-            onAddClick = {
-                artistList.add(Artist(name, genre, yearFormed.toIntOrNull() ?: 0))
-            }
-        )
-        DisplayArtistList(
-            artistList = artistList,
-            onRemoveClick =  { artistList.remove(it) }
-        )
+    Scaffold(
+        topBar = {
+            TopAppBar(title = {Text("The Artist App.")})
+        }
+    ) { scafPadding ->
+        Column(
+            modifier = Modifier
+                .padding(scafPadding)
+                .fillMaxSize()
+        ) {
+            AddArtistForm(
+                name = name,
+                genre = genre,
+                yearFormed = yearFormed,
+                onNameChange = { name = it },
+                onGenreChange = { genre = it },
+                onYearFormedChange = { yearFormed = it },
+                onAddClick = {
+                    artistList.add(Artist(name, genre, yearFormed.toIntOrNull() ?: 0))
+                }
+            )
+            DisplayArtistList(
+                artistList = artistList,
+                onRemoveClick =  { artistList.remove(it) }
+            )
+        }
     }
 }
 
@@ -94,6 +113,7 @@ fun AddArtistForm(
         OutlinedTextField(
             value = yearFormed,
             onValueChange = onYearFormedChange,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             label = { Text("Enter the year they formed..") },
             singleLine = true
         )
@@ -101,7 +121,7 @@ fun AddArtistForm(
             modifier = Modifier
                 .height(3.dp)
         )
-        FloatingActionButton(
+        Button(
             onClick = onAddClick
         ) {
             Text("Add Artist!")
