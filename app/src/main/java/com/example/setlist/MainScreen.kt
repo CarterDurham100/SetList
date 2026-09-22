@@ -36,9 +36,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.text.isDigitsOnly
 import com.example.setlist.ui.theme.SetListTheme
 
-data class Artist(var name: String, val genre: String, val yearFormed: Int?)
+data class Artist(var name: String, val genre: String, val yearFormed: String)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen() {
@@ -64,7 +65,7 @@ fun MainScreen() {
                 onGenreChange = { genre = it },
                 onYearFormedChange = { yearFormed = it },
                 onAddClick = {
-                    artistList.add(Artist(name, genre, yearFormed.toIntOrNull() ?: 0))
+                    artistList.add(Artist(name, genre, yearFormed))
                 }
             )
             DisplayArtistList(
@@ -85,6 +86,10 @@ fun AddArtistForm(
     onYearFormedChange: (String) -> Unit,
     onAddClick: () -> Unit
     ) {
+    var nameError = name.isEmpty()
+    var genreError = genre.isEmpty()
+    var yearError = !yearFormed.isDigitsOnly() || yearFormed.length !== 4
+    var formValid = !nameError && !genreError && !yearError
     Column(
         modifier = Modifier
             .padding(horizontal = 10.dp),
@@ -93,6 +98,12 @@ fun AddArtistForm(
         OutlinedTextField(
             value = name,
             onValueChange = onNameChange,
+            isError = nameError,
+            supportingText = {
+                if (nameError) {
+                    Text("Please enter an artist.,,")
+                }
+            },
             label = { Text("Enter artist name..") },
             singleLine = true
         )
@@ -103,6 +114,12 @@ fun AddArtistForm(
         OutlinedTextField(
             value = genre,
             onValueChange = onGenreChange,
+            isError = genreError,
+            supportingText = {
+                if (genreError) {
+                    Text("Please enter an genre.,,")
+                }
+            },
             label = { Text("Enter artist's genre..") },
             singleLine = true
         )
@@ -113,6 +130,12 @@ fun AddArtistForm(
         OutlinedTextField(
             value = yearFormed,
             onValueChange = onYearFormedChange,
+            isError = yearError,
+            supportingText = {
+                if (yearError) {
+                    Text("Please enter a valid year.,,")
+                }
+            },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             label = { Text("Enter the year they formed..") },
             singleLine = true
@@ -122,7 +145,8 @@ fun AddArtistForm(
                 .height(3.dp)
         )
         Button(
-            onClick = onAddClick
+            onClick = onAddClick,
+            enabled = formValid
         ) {
             Text("Add Artist!")
         }
@@ -164,17 +188,17 @@ fun DisplayArtistList(
                         text = item.genre,
                         fontStyle = FontStyle.Italic
                     )
-                    if (item.yearFormed == 0) {
-                        Text(
-                            text = "Founded in: N/A",
-                            fontStyle = FontStyle.Italic
-                        )
-                    } else {
+                    //if (item.yearFormed == 0) {
+                    //    Text(
+                    //        text = "Founded in: N/A",
+                    //        fontStyle = FontStyle.Italic
+                    //    )
+                    //} else {
                         Text(
                             text = "Founded in: " + item.yearFormed,
                             fontStyle = FontStyle.Italic
                         )
-                    }
+                    //}
                 }
 
                 FloatingActionButton(
