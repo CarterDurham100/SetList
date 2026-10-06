@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
 import com.example.setlist.ui.theme.SetListTheme
 
-data class Artist(var name: String, val genre: String, val yearFormed: String)
+data class Artist(var id: Int = 0, var name: String, val genre: String, val yearFormed: String)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen() {
