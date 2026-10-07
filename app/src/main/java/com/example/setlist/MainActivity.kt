@@ -34,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.setlist.Nav.AppNav
 import com.example.setlist.ui.theme.SetListTheme
 import kotlinx.coroutines.MainScope
 
@@ -43,11 +44,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             SetListTheme {
-                Column(
-                    modifier = Modifier.safeDrawingPadding()
-                ) {
-                    MainScreen()
-                }
+                AppNav()
             }
         }
     }

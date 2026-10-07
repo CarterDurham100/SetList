@@ -5,16 +5,24 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.core.text.isDigitsOnly
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.setlist.Artist
-
+import com.example.setlist.Containers.ArtistApp
 
 @Composable
 fun AddArtistRoute(
-    onAddClick: () -> Unit,
-    viewModel: AddArtistViewModel = viewModel()
+    onAddClick: () -> Unit
 ) {
+    val app = LocalContext.current.applicationContext as ArtistApp
+    val viewModel: AddArtistViewModel = viewModel(
+        factory = viewModelFactory {
+            initializer { AddArtistViewModel(app.container.repository) }
+        }
+    )
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -40,7 +48,7 @@ fun AddArtistRoute(
             formValid = viewModel.name.isNotEmpty() &&
                     viewModel.genre.isNotEmpty() &&
                     viewModel.yearFormed.length == 4 &&
-                    viewModel.yearFormed.isDigitsOnly()
+                    viewModel.yearFormed.all { it.isDigit() }
         )
     }
 }

@@ -26,7 +26,7 @@ import androidx.compose.material3.Text
 @Composable
 fun ArtistDetailScreen(
     uiState: ArtistDetailUiState,
-    onToggleArtistList: () -> Unit,
+    onDelete: () -> Unit,
     onBack: () -> Unit
 ) {
     Scaffold(
@@ -73,12 +73,10 @@ fun ArtistDetailScreen(
                 ) {
                     Text("Genre: ${uiState.artist.genre}")
                     Text("Formed in: ${uiState.artist.yearFormed}")
-                    // the label comes from the state, not from a remembered toggle: tap it and the
-                    // repository changes, the ViewModel emits a new Ready, and the label follows
                     Button(
-                        onClick = onToggleArtistList
+                        onClick = onDelete
                     ) {
-                        Text(if (uiState.isOnList) "Remove from list" else "Add to list")
+                        Text("Delete")
                     }
                 }
             }

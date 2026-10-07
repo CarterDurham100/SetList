@@ -13,7 +13,8 @@ import com.example.setlist.Containers.ArtistApp
 @Composable
 fun ArtistDetailRoute(
     artistId: Int,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onDelete: () -> Unit
 ) {
     val app = LocalContext.current.applicationContext as ArtistApp
     val viewModel: ArtistDetailViewModel = viewModel(
@@ -28,7 +29,7 @@ fun ArtistDetailRoute(
 
     ArtistDetailScreen(
         uiState = uiState,
-        onToggleArtistList = viewModel::toggleArtistList,
+        onDelete = onDelete,
         onBack = onBack
     )
 }
