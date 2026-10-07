@@ -38,6 +38,7 @@ fun AddArtistRoute(
             onAddClick = {
                 viewModel.add(
                     Artist(
+                        id = 0,
                         name = viewModel.name,
                         genre = viewModel.genre,
                         yearFormed = viewModel.yearFormed
