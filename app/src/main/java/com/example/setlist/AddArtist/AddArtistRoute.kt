@@ -11,6 +11,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.setlist.Artist
 import com.example.setlist.Containers.ArtistApp
+import java.time.Instant
 
 @Composable
 fun AddArtistRoute(
@@ -41,7 +42,8 @@ fun AddArtistRoute(
                         id = 0,
                         name = viewModel.name,
                         genre = viewModel.genre,
-                        yearFormed = viewModel.yearFormed
+                        yearFormed = viewModel.yearFormed,
+                        dateAdded = Instant.now()
                     )
                 )
                 onAddClick()

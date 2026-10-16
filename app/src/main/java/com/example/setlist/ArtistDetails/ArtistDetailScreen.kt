@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.Text
+import java.time.Instant
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -67,12 +68,14 @@ fun ArtistDetailScreen(
                 }
             }
             is ArtistDetailUiState.Ready -> {
+                val dateText = uiState.artist.dateAdded.toString()
                 Column(
                     modifier = Modifier.padding(innerPadding).padding(24.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text("Genre: ${uiState.artist.genre}")
                     Text("Formed in: ${uiState.artist.yearFormed}")
+                    Text("Record added on: $dateText")
                     Button(
                         onClick = onDelete
                     ) {
