@@ -12,5 +12,5 @@ data class RoomArtist(
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "genre") val genre: String,
     @ColumnInfo(name = "year_formed") val yearFormed: String,
-    @ColumnInfo(name = "date_added") val dateAdded: Long
+    @ColumnInfo(name = "date_added") val dateAdded: Instant = Instant.now()
 )

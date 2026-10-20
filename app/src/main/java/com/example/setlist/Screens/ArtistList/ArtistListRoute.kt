@@ -22,9 +22,13 @@ fun ArtistListRoute(
         }
     )
     val artists by viewModel.artistList.collectAsStateWithLifecycle()
+    val query by viewModel.query.collectAsStateWithLifecycle()
+    val results by viewModel.results.collectAsStateWithLifecycle()
 
     ArtistListScreen(
-        artists = artists,
+        artists = results,
+        query = query,
+        onQueryChange = viewModel::onQueryChange,
         onAddClick = onAddClick,
         onArtistClick = onArtistClick
     )
