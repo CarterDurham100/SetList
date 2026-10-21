@@ -54,14 +54,12 @@ fun ArtistListScreen(
             OutlinedTextField(
                 value = query,
                 onValueChange = onQueryChange,
-                label = { Text("Search artists...")},
+                label = { Text("Search artists...") },
                 leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
                 trailingIcon = {
-                    if(query.isNotEmpty()) {
-                        IconButton(
-                            onClick = {onQueryChange("")}
-                        ) {
-                            Icon(Icons.Filled.Clear, contentDescription = "")
+                    if (query.isNotEmpty()) {
+                        IconButton(onClick = { onQueryChange("") }) {
+                            Icon(Icons.Filled.Clear, contentDescription = "Clear search")
                         }
                     }
                 },
@@ -70,29 +68,36 @@ fun ArtistListScreen(
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 8.dp)
             )
-        }
-        if (artists.isEmpty()) {
-            Box(
-                modifier = Modifier.fillMaxSize().padding(innerPadding),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("Empty list...")
-            }
-        } else {
-            LazyColumn(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
-                items(artists, key = { it.id }) { artist ->
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 4.dp)
-                            .clickable { onArtistClick(artist) }
-                    ) {
-                        ListItem(
-                            headlineContent = { Text(artist.name) },
-                            supportingContent = {
-                                Text("${artist.genre}, formed in: ${artist.yearFormed}")
-                            }
-                        )
+
+            if (artists.isEmpty()) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("Empty list...")
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                ) {
+                    items(artists, key = { it.id }) { artist ->
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp, vertical = 4.dp)
+                                .clickable { onArtistClick(artist) }
+                        ) {
+                            ListItem(
+                                headlineContent = { Text(artist.name) },
+                                supportingContent = {
+                                    Text("${artist.genre}, formed in: ${artist.yearFormed}")
+                                }
+                            )
+                        }
                     }
                 }
             }

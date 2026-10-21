@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-
+import java.security.PrivateKey
 
 class ArtistDetailViewModel(private val artistId: Int, private val repository: ArtistRepository) : ViewModel() {
     val uiState: StateFlow<ArtistDetailUiState> =
@@ -44,6 +44,15 @@ class ArtistDetailViewModel(private val artistId: Int, private val repository: A
             repository.removeFromArtistList(current.artist)
         } else {
             repository.addToArtistList(current.artist)
+        }
+    }
+
+    fun toggleFav() {
+        val current = uiState.value as? ArtistDetailUiState.Ready ?: return
+        viewModelScope.launch {
+            repository.addToArtistList(
+                current.artist.copy(isFav = !current.artist.isFav)
+            )
         }
     }
 

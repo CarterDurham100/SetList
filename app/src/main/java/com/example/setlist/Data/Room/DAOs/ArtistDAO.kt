@@ -9,13 +9,13 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ArtistDAO {
-    @Query("SELECT * FROM artists ORDER BY name DESC")
+    @Query("SELECT * FROM artist_table ORDER BY name DESC")
     fun observeAll():Flow<List<RoomArtist>>
 
-    @Query("SELECT * FROM artists WHERE id = :id")
+    @Query("SELECT * FROM artist_table WHERE id = :id")
     fun observeById(id: Int): Flow<RoomArtist?>
 
-    @Query("SELECT * FROM artists WHERE name LIKE :term ORDER BY name DESC")
+    @Query("SELECT * FROM artist_table WHERE name LIKE :term || '%' ORDER BY name ASC")
     fun search(term: String): Flow<List<RoomArtist>>
 
     @Upsert suspend fun upsert(artist: RoomArtist)

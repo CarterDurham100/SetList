@@ -30,6 +30,7 @@ fun ArtistDetailRoute(
     ArtistDetailScreen(
         uiState = uiState,
         onDelete = onDelete,
+        onToggleFac = viewModel::toggleFav,
         onBack = onBack
     )
 }

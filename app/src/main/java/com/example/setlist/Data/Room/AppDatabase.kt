@@ -10,7 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import com.example.setlist.Artist
 import com.example.setlist.Data.Room.DAOs.ArtistDAO
 
-@Database(entities = [Artist::class], version = 1, exportSchema = true)
+@Database(entities = [RoomArtist::class], version = 2, exportSchema = true)
 @ColumnTypeConverters(InstantConverter::class)
 abstract class AppDatabase : RoomDatabase(){
     abstract fun artistDAO(): ArtistDAO
@@ -27,6 +27,7 @@ abstract class AppDatabase : RoomDatabase(){
         private fun build(context: Context) = Room.databaseBuilder<AppDatabase>(context, "artist.db")
             .setDriver(BundledSQLiteDriver())
             .setQueryCoroutineContext(Dispatchers.IO)
+            .addMigrations(MIGRATION_1_2)
             .build()
     }
 }

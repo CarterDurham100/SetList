@@ -19,6 +19,11 @@ class ArtistRepositoryImplementation : ArtistRepository {
             .distinctUntilChanged()
     }
 
+    override fun search(term: String): Flow<List<Artist>> =
+        artists.map { list ->
+            list.filter { it.name.startsWith(term, ignoreCase = true) }
+        }
+
     override suspend fun addToArtistList(artist: Artist) {
         artist.id = id
         _artists.update { current -> current + artist}

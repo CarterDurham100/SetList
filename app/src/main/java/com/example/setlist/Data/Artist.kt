@@ -6,5 +6,6 @@ data class Artist(
     val name: String,
     val genre: String,
     val yearFormed: String,
+    val isFav: Boolean = false,
     val dateAdded: Instant
 )

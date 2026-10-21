@@ -18,5 +18,5 @@ class RoomArtistRepository(private  val dao: ArtistDAO): ArtistRepository {
     override suspend fun removeFromArtistList(artist: Artist) = dao.delete(artist.toEntity())
 }
 
-private fun Artist.toEntity(): RoomArtist = RoomArtist(id = id, name = name, genre = genre, yearFormed = yearFormed, dateAdded = dateAdded)
-private fun RoomArtist.toArtist(): Artist = Artist(id = id, name = name, genre = genre, yearFormed = yearFormed, dateAdded = dateAdded)
+private fun Artist.toEntity(): RoomArtist = RoomArtist(id = id, name = name, genre = genre, yearFormed = yearFormed, isFav = isFav, dateAdded = dateAdded)
+private fun RoomArtist.toArtist(): Artist = Artist(id = id, name = name, genre = genre, yearFormed = yearFormed, isFav = isFav, dateAdded = dateAdded)
