@@ -14,20 +14,4 @@ import com.example.setlist.Data.Room.DAOs.ArtistDAO
 @ColumnTypeConverters(InstantConverter::class)
 abstract class AppDatabase : RoomDatabase(){
     abstract fun artistDAO(): ArtistDAO
-
-    companion object {
-        @Volatile private var INSTANCE: AppDatabase? = null
-
-        fun get(context: Context): AppDatabase = INSTANCE ?: synchronized(this) {
-            INSTANCE ?: build(context.applicationContext).also {
-                INSTANCE = it
-            }
-        }
-
-        private fun build(context: Context) = Room.databaseBuilder<AppDatabase>(context, "artist.db")
-            .setDriver(BundledSQLiteDriver())
-            .setQueryCoroutineContext(Dispatchers.IO)
-            .addMigrations(MIGRATION_1_2)
-            .build()
-    }
 }

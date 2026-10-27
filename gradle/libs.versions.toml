@@ -12,6 +12,9 @@ navigation3Runtime = "1.0.0"
 navigation3Ui = "1.0.0"
 room3Compiler = "3.0.3"
 roomCompiler = "2.8.5"
+hilt = "2.60.1"
+androidxHilt = "1.4.0"
+ksp = "2.3.11"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -32,11 +35,12 @@ androidx-navigation3-runtime = { group = "androidx.navigation3", name = "navigat
 androidx-navigation3-ui = { group = "androidx.navigation3", name = "navigation3-ui", version.ref = "navigation3Ui" }
 androidx-room3-compiler = { group = "androidx.room3", name = "room3-compiler", version.ref = "room3Compiler" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomCompiler" }
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt"}
+hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
+hilt-viewmodel-compose = { module = "androidx.hilt:hilt-lifecycle-viewmodel-compose", version.ref = "androidxHilt" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-
-
-
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }

@@ -36,8 +36,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.setlist.Nav.AppNav
 import com.example.setlist.ui.theme.SetListTheme
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.MainScope
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
