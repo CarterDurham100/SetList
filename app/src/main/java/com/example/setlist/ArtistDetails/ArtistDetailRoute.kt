@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
@@ -17,12 +18,8 @@ fun ArtistDetailRoute(
     onDelete: () -> Unit
 ) {
     val app = LocalContext.current.applicationContext as ArtistApp
-    val viewModel: ArtistDetailViewModel = viewModel(
-        factory = viewModelFactory {
-            initializer {
-                ArtistDetailViewModel(artistId, app.container.repository)
-            }
-        }
+    val viewModel = hiltViewModel<ArtistDetailViewModel, ArtistDetailViewModel.Factory>(
+        creationCallback = { it.create(artistId) }
     )
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()

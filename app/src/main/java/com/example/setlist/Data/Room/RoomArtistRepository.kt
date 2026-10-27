@@ -9,8 +9,9 @@ import com.example.setlist.Data.Room.DAOs.ArtistDAO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class RoomArtistRepository(private  val dao: ArtistDAO): ArtistRepository {
+class RoomArtistRepository @Inject constructor(private  val dao: ArtistDAO): ArtistRepository {
     override val artists: Flow<List<Artist>> = dao.observeAll().map { rows -> rows.map { it.toArtist() } }
     override fun getArtistById(id: Int): Flow<Artist?> = dao.observeById(id).map { it?.toArtist() }
     override fun search(term: String): Flow<List<Artist>> = dao.search(term).map { rows -> rows.map {it.toArtist()}}

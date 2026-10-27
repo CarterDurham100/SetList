@@ -16,9 +16,17 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
+import dagger.hilt.android.lifecycle.HiltViewModel
 import java.security.PrivateKey
 
-class ArtistDetailViewModel(private val artistId: Int, private val repository: ArtistRepository) : ViewModel() {
+@HiltViewModel(assistedFactory = ArtistDetailViewModel.Factory::class)
+class ArtistDetailViewModel @AssistedInject constructor(
+    @Assisted private val artistId: Int,
+    private val repository: ArtistRepository
+) : ViewModel() {
     val uiState: StateFlow<ArtistDetailUiState> =
         repository.artists
             .map { artists ->
@@ -60,5 +68,10 @@ class ArtistDetailViewModel(private val artistId: Int, private val repository: A
         fun factory(id: Int, repository: ArtistRepository): ViewModelProvider.Factory = viewModelFactory {
             initializer { ArtistDetailViewModel(id, repository) }
         }
+    }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(artistId: Int): ArtistDetailViewModel
     }
 }

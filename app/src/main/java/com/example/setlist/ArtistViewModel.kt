@@ -25,12 +25,12 @@ class ArtistViewModel(private val repository: ArtistRepository) : ViewModel() {
         viewModelScope.launch { repository.removeFromArtistList(artist) }
     }
 
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val app = this[APPLICATION_KEY] as ArtistApp
-                ArtistViewModel(app.container.repository)
-            }
-        }
-    }
+    //companion object {
+    //    val Factory: ViewModelProvider.Factory = viewModelFactory {
+    //        initializer {
+    //            val app = this[APPLICATION_KEY] as ArtistApp
+    //            ArtistViewModel(app.container.repository)
+    //        }
+    //    }
+    //}
 }

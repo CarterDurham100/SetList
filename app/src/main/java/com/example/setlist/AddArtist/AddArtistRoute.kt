@@ -6,23 +6,27 @@ import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.setlist.Artist
+import com.example.setlist.ArtistViewModel
 import com.example.setlist.Containers.ArtistApp
+import com.example.setlist.Screens.ArtistList.ArtistListViewModel
 import java.time.Instant
 
 @Composable
 fun AddArtistRoute(
-    onAddClick: () -> Unit
+    onAddClick: () -> Unit,
+    viewModel: AddArtistViewModel = hiltViewModel()
 ) {
     val app = LocalContext.current.applicationContext as ArtistApp
-    val viewModel: AddArtistViewModel = viewModel(
-        factory = viewModelFactory {
-            initializer { AddArtistViewModel(app.container.repository) }
-        }
-    )
+    //val viewModel: AddArtistViewModel = viewModel(
+    //    factory = viewModelFactory {
+    //        initializer { AddArtistViewModel(app.container.repository) }
+    //    }
+    //)
 
     Box(
         modifier = Modifier

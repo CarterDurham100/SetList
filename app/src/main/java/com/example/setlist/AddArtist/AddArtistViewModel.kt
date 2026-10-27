@@ -11,12 +11,15 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.setlist.Artist
 import com.example.setlist.ArtistDetails.ArtistDetailViewModel
 import com.example.setlist.Data.ArtistRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class AddArtistViewModel(private val repository: ArtistRepository) : ViewModel() {
+@HiltViewModel
+class AddArtistViewModel @Inject constructor(private val repository: ArtistRepository) : ViewModel() {
     var name by mutableStateOf("")
         private set
 

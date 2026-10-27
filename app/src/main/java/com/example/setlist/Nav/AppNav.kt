@@ -8,6 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.window.DialogProperties
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
@@ -32,12 +33,11 @@ import com.example.setlist.Screens.ArtistList.ArtistListViewModel
 
 @Composable
 fun AppNav() {
-    val repository = (LocalContext.current.applicationContext as ArtistApp).container.repository
     val backStack = rememberNavBackStack(AppKey.ArtistList)
 
     NavDisplay(
         backStack = backStack,
-        onBack =  { backStack.removeLastOrNull() },
+        onBack = { backStack.removeLastOrNull() },
         sceneStrategy = remember { DialogSceneStrategy<NavKey>() },
         entryDecorators = listOf(
             rememberSaveableStateHolderNavEntryDecorator(),
@@ -75,10 +75,8 @@ fun AppNav() {
             entry<AppKey.ConfirmDelete>(
                 metadata = DialogSceneStrategy.dialog(DialogProperties())
             ) { key ->
-                val viewModel: ArtistDetailViewModel = viewModel(
-                    factory = viewModelFactory {
-                        initializer { ArtistDetailViewModel(key.id, repository) }
-                    }
+                val viewModel = hiltViewModel<ArtistDetailViewModel, ArtistDetailViewModel.Factory>(
+                    creationCallback = { factory -> factory.create(key.id) }
                 )
                 ConfirmDeleteDialog(
                     onConfirm = {

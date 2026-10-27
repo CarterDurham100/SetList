@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,9 +22,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
+import javax.inject.Inject
 
-
-class ArtistListViewModel(private val repository: ArtistRepository) : ViewModel() {
+@HiltViewModel
+class ArtistListViewModel @Inject constructor(private val repository: ArtistRepository) : ViewModel() {
     val artistList: StateFlow<List<Artist>> = repository.artists
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
