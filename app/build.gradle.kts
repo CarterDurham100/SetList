@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.hilt)
-    id("com.google.devtools.ksp") version "2.3.11"
+    alias(libs.plugins.ksp)
     id("androidx.room3") version "3.0.3"
 }
 
@@ -50,7 +50,9 @@ android {
 dependencies {
     implementation("androidx.room3:room3-runtime:3.0.3")
     implementation("androidx.sqlite:sqlite-bundled:2.7.1")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
+    implementation(libs.core.ktx)
+    //implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
+    implementation(libs.kotlinx.serialization.json)
     implementation("androidx.lifecycle:lifecycle-viewmodel-navigation3:2.10.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.10.0")
     implementation(libs.androidx.core.ktx)
@@ -66,6 +68,8 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.hilt.viewmodel.compose)
     testImplementation(libs.junit)
+    implementation(libs.androidx.work.runtime)
+    androidTestImplementation(libs.androidx.work.testing)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
@@ -74,4 +78,6 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     ksp("androidx.room3:room3-compiler:3.0.3")
     ksp(libs.hilt.compiler)
+    implementation(libs.androidx.hilt.work)
+    ksp(libs.androidx.hilt.compiler)
 }

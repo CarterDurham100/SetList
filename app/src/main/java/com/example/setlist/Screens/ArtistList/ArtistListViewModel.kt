@@ -1,31 +1,36 @@
 package com.example.setlist.Screens.ArtistList
 
-import androidx.collection.emptyScatterMap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.setlist.Artist
-import com.example.setlist.Containers.ArtistApp
 import com.example.setlist.Data.ArtistRepository
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import com.example.setlist.Data.BackupScheduler
+import com.example.setlist.Data.BackupStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
+data class ArtistListUiState(
+    val artists: List<Artist> = emptyList(),
+    val query: String = "",
+    val backupStatus: BackupStatus = BackupStatus.Idle
+)
+
 @HiltViewModel
-class ArtistListViewModel @Inject constructor(private val repository: ArtistRepository) : ViewModel() {
+class ArtistListViewModel @Inject constructor(private val repository: ArtistRepository, private val backupScheduler: BackupScheduler) : ViewModel() {
     val artistList: StateFlow<List<Artist>> = repository.artists
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
@@ -36,6 +41,8 @@ class ArtistListViewModel @Inject constructor(private val repository: ArtistRepo
         _query.value = value
     }
 
+    fun onBackupClick() = backupScheduler.scheduleBackups()
+
     @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
     val results: StateFlow<List<Artist>> = _query
         .debounce(300)
@@ -43,9 +50,15 @@ class ArtistListViewModel @Inject constructor(private val repository: ArtistRepo
         .flatMapLatest { term -> if(term.isBlank()) repository.artists else repository.search(term)}
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
+    val uiState: StateFlow<ArtistListUiState> = combine(
+        _query, results, backupScheduler.backupNowStatus
+    ) { query, artists, status ->
+        ArtistListUiState(artists = artists, query = query, backupStatus = status)
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), ArtistListUiState())
+
     companion object {
-        fun Factory(repository: ArtistRepository): ViewModelProvider.Factory = viewModelFactory {
-            initializer { ArtistListViewModel(repository) }
+        fun Factory(repository: ArtistRepository, backupScheduler: BackupScheduler): ViewModelProvider.Factory = viewModelFactory {
+            initializer { ArtistListViewModel(repository, backupScheduler) }
         }
     }
 }

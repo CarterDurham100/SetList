@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -26,9 +27,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.room3.Query
-import androidx.room3.util.TableInfo
 import com.example.setlist.Artist
+import com.example.setlist.Data.BackupStatus
 import com.example.setlist.ui.theme.SetListTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -36,12 +36,26 @@ import com.example.setlist.ui.theme.SetListTheme
 fun ArtistListScreen(
     artists: List<Artist>,
     query: String,
+    backupStatus: BackupStatus,
     onQueryChange: (String) -> Unit,
     onAddClick: () -> Unit,
-    onArtistClick: (Artist) -> Unit
+    onArtistClick: (Artist) -> Unit,
+    onBackupClick: () -> Unit
 ) {
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Artist List") }) },
+        topBar = {
+            TopAppBar(
+                title = { Text("Artist List") },
+                actions = {
+                    IconButton(
+                        onClick = onBackupClick,
+                        enabled = backupStatus !is BackupStatus.Running
+                    ) {
+                        Icon(Icons.Filled.Refresh, contentDescription = "Back up now")
+                    }
+                }
+            )
+        },
         floatingActionButton = {
             FloatingActionButton(onClick = onAddClick) { Text("+") }
         }
@@ -51,6 +65,19 @@ fun ArtistListScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
+            val statusText = when (backupStatus) {
+                BackupStatus.Idle -> null
+                BackupStatus.Running -> "Backing up..."
+                is BackupStatus.Finished -> "Last backup: ${backupStatus.numOfArtistsBackedUp} artists"
+                BackupStatus.Failed -> "Backup failed"
+            }
+            if (statusText != null) {
+                Text(
+                    text = statusText,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
+                )
+            }
+
             OutlinedTextField(
                 value = query,
                 onValueChange = onQueryChange,
@@ -109,6 +136,14 @@ fun ArtistListScreen(
 @Composable
 fun ArtistListScreenPreview() {
     SetListTheme {
-        ArtistListScreen(artists = emptyList(), query = "hi", onQueryChange = {}, onAddClick = {}, onArtistClick = {})
+        ArtistListScreen(
+            artists = emptyList(),
+            query = "hi",
+            backupStatus = BackupStatus.Finished(4),
+            onQueryChange = {},
+            onAddClick = {},
+            onArtistClick = {},
+            onBackupClick = {}
+        )
     }
 }

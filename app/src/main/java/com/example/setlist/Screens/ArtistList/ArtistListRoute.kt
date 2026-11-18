@@ -23,15 +23,15 @@ fun ArtistListRoute(
     //        initializer { ArtistListViewModel(app.container.repository) }
     //    }
     //)
-    val artists by viewModel.artistList.collectAsStateWithLifecycle()
-    val query by viewModel.query.collectAsStateWithLifecycle()
-    val results by viewModel.results.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     ArtistListScreen(
-        artists = results,
-        query = query,
+        artists = uiState.artists,
+        query = uiState.query,
+        backupStatus = uiState.backupStatus,
         onQueryChange = viewModel::onQueryChange,
         onAddClick = onAddClick,
-        onArtistClick = onArtistClick
+        onArtistClick = onArtistClick,
+        onBackupClick = viewModel::onBackupClick
     )
 }
